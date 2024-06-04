@@ -1,0 +1,65 @@
+Tasks
+1. Create the Food and Restaurant models as defined in the ERD in the resources section of
+this document, with appropriate property types, nullability, and relationships.
+
+2. Update the DbContext file to include your newly created models, so that you are able to use
+them with Entity Framework.
+
+3. Add some seed some data for your new models into the OnModelCreating method in the
+DbContext.
+
+4. Run a migration with the changes you have made to the DbContext, and update the
+database.
+
+5. Create DTO objects that you will use for all your requests. You can see the diagram below
+for some examples.
+
+6. Create controllers and actions that allow you to:
+a. Login
+b. Get all food items
+c. Create a new food item
+d. Delete a food item
+
+7. Add the missing JWT configuration settings to the appsettings.json file. Use appropriate
+values for Issuer, Audience, and Key.
+
+8. Implement login functionality inside the AuthService file.
+
+9. Add a “group” claim to the generated token in the AuthService file. This group claim should
+match the group assigned to the user that is trying to log in.
+
+10. Create a policy in Program.cs that can be used to check if a user has the “admin” group
+claim.
+
+11. Add your admin policy to the endpoints that allow you to create a new food item, or delete a
+food item.
+
+12. Configure CORS in your back-end to allows origin access from your front-end application
+only.
+
+13. Make sure that your endpoints in swagger are returning the correct information.
+
+14. Create a .env file in your front-end application that contains a variable for your backend URL,
+and use this variable when making your fetch requests to the back-end application.
+
+15. Finish adding functionality to the “Login” page that allows a user to log in using credentials
+stored in the back-end database. Ensure the token returned from the backend is stored in
+session storage to be retrieved at a later date.
+
+16. Finish adding functionality to the “FoodList” page that displays a list of foods returned from
+the back-end, using the “FoodItem” component to display the foods.
+
+17. Add functionality to the “Delete” button in the “FoodItem” component that deletes the
+specified food if the user is authorized to do so.
+
+18. Add functionality to the “NewFoodForm” component that allows a user to create a new food
+item if they are authorized to do so.
+
+19. Hide both the “Delete” and “Create” buttons if the user is not authorized to make the
+requests to the backend.
+
+20. Update the page state to reflect the changes that are made on the backend when you
+successfully perform a “Create” or “Delete” operation as specified earlier.
+
+21. If you finish all these tasks, and want to practice, just try doing the same thing but create
+your own models :)
