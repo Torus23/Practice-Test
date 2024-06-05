@@ -8,19 +8,17 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 
-export const FoodItem = () => {
+export const FoodItem = ({foodId, name, description}) => {
   return (
     <Card>
       <CardHeader>
         <Heading size="md">
-          This should be the name of the food, passed via props
+          {name}
         </Heading>
       </CardHeader>
 
       <CardBody>
-        This should be some details about the food, passed via props. The delete
-        button below should also be hidden unless you are logged in as an admin
-        user
+        {description === null? "No description": description}
       </CardBody>
       <CardFooter>
         <Button variant={'outline'} colorScheme="red">

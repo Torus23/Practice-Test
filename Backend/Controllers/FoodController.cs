@@ -41,6 +41,7 @@ namespace Backend.Controllers
         }
         // api/delete/1
         [HttpDelete, Route("delete/{id}")]
+        [Authorize("IsAdmin")]
           public ActionResult<bool> DeleteFoodItem(int id)
         {
             var foodToDelete = db.Foods.Find(id);

@@ -16,6 +16,9 @@ export const FoodList = () => {
   useEffect(() => {
     // TODO: Implement the HTTP request to set the listItems state defined above
     // TODO: This will be done by fetching all items from our backend based on requirements.
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/Food/all`)
+        .then(res=> res.json())
+        .then(body => setListItems(body));
   }, []);
 
   return (
@@ -37,10 +40,16 @@ export const FoodList = () => {
         that are acting as placeholders - please replace these with your own.
       </Text>
       <SimpleGrid columns={2} spacing={5}>
-        <FoodItem />
-        <FoodItem />
-        <FoodItem />
-        <FoodItem />
+        {
+          listItems.map(item =>{
+            <FoodItem 
+              key={item.foodId} 
+              foodId={item.foodId} 
+              name={item.name} 
+              description={item.description}
+            />
+          })
+        }
       </SimpleGrid>
     </Flex>
   );
