@@ -57,33 +57,42 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.MapInboundClaims = false;
-    var signingKeyData = config["JwtSettings:Key"];
-    var signingKeyBytes = Encoding.UTF8.GetBytes(signingKeyData!);
-    var signingKey = new SymmetricSecurityKey(signingKeyBytes); 
-    var issuer = config["JwtSettings:Issuer"];
-    var audience = config["JwtSettings:Audience"];
+   // This is the important part!!
+  options.MapInboundClaims = false;
+ 
+  var signingKeyData = config["JwtSettings:Key"];
+  var signingKeyBytes = Encoding.UTF8.GetBytes(signingKeyData!);
+  var signingKey = new SymmetricSecurityKey(signingKeyBytes);
+ 
+ 
+  var issuer = config["JwtSettings:Issuer"];
+  var audience = config["JwtSettings:Audience"];
+ 
 
 
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidAudience = config["JwtSettings:Audience"],
-        ValidIssuer = config["JwtSettings:Issuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
-        ValidateAudience = true,
-        ValidateIssuer = true,
-        ValidateIssuerSigningKey = true,
-        ValidateLifetime = true
-    };
+      options.TokenValidationParameters = new TokenValidationParameters
+  {
+    ValidateAudience = true,
+    ValidateIssuer = true,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    ValidIssuer = issuer,
+    ValidAudience = audience,
+    IssuerSigningKey = signingKey
+  };
 });
 
 builder.Services.AddAuthorization(options =>
 {
-    //TODO: Add some policies here
+    options.AddPolicy("IsAdmin", policy =>  
+    {
+        policy.RequireClaim("group","1");
+    }  
+    );
 });
 
 builder.Services.AddScoped<AuthService>();
-
+builder.Services.AddCors();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -94,6 +103,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(options => options.AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins("http://localhost:3000")
+    );
 
 app.UseAuthentication();
 app.UseAuthorization();

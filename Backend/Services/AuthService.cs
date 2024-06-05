@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Backend.Data;
 using Backend.Dtos;
+using Backend.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Backend.Services
@@ -25,12 +26,23 @@ namespace Backend.Services
     public LoginResponse Login(LoginRequest request)
     {
       // TODO: Implement login validation logic here.
+      var user = db.AppUsers.SingleOrDefault(u=> u.Username == request.Username);
+      var response = new LoginResponse();
 
-      var token = GenerateUserToken(request);
-      throw new NotImplementedException();
+      if(user==null||user.Password!= request.Password){
+        response.Message = "username or password is incorrect.";
+        return response;
+      }
+
+      var token = GenerateUserToken(user);
+      response.Token=token;
+      response.Message = "Success.";
+      response.UserGroup = user.GroupId.ToString();
+      
+      return response;
     }
 
-    private string GenerateUserToken(LoginRequest request)
+    private string GenerateUserToken(AppUser user)
     {
       var issuer = config["JwtSettings:Issuer"];
       var audience = config["JwtSettings:Audience"];
@@ -40,7 +52,10 @@ namespace Backend.Services
       var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!));
       var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-      var claims = new List<Claim>();
+      var claims = new List<Claim>()
+      {
+        new Claim("group",user.GroupId.ToString())
+      };
       //   TODO: Add appropriate claims to the 'claims' list above.
 
       var jwt = new JwtSecurityToken(
