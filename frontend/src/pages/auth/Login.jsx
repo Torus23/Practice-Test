@@ -15,20 +15,22 @@ export const Login = () => {
 
     // TODO: Make HTTP request to login endpoint in backend.
     // TODO: Save response data to session storage.
-    const loginData={
+    const loginData = {
       username: username,
       password: password
     }
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/Auth/Login`, {
-      method:"post",
-      headers:{
-        "Content-Type": "application/json"
+
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/login`, {
+      method: 'post',
+      headers: {
+        
+        "Content-Type" : "application/json"
       },
       body: JSON.stringify(loginData)
     })
     .then(res=> res.json())
     .then(body=>{
-      if(body.token!==null) sessionStorage.setItem('token',body.token)
+      if(body.token !== null) sessionStorage.setItem('token', body.token)
       if(body.userGroup !== null) sessionStorage.setItem('userGroup', body.userGroup)
     });
   }

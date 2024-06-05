@@ -16,22 +16,24 @@ export const FoodList = () => {
   useEffect(() => {
     // TODO: Implement the HTTP request to set the listItems state defined above
     // TODO: This will be done by fetching all items from our backend based on requirements.
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/Food/all`)
-        .then(res=> res.json())
-        .then(body => setListItems(body));
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/food/all`)
+      .then(res => res.json())
+      .then(body => setListItems(body));
   }, []);
 
   return (
     <Flex direction={'column'} gap={5} w={'50%'} mx={'auto'}>
       <NewFoodForm isOpen={isOpen} onClose={onClose} />
-      <Button
-        alignSelf={'center'}
-        variant={'outline'}
-        colorScheme="green"
-        onClick={onOpen}
-      >
-        Create New Food
-      </Button>
+      {sessionStorage.getItem('userGroup') === '1' && (
+              <Button
+                alignSelf={'center'}
+                variant={'outline'}
+                colorScheme="green"
+                onClick={onOpen}
+              >
+                Create New Food
+              </Button>
+      )}
 
       <Text>
         You will need to implement code to display the food items here. Use the
@@ -41,14 +43,16 @@ export const FoodList = () => {
       </Text>
       <SimpleGrid columns={2} spacing={5}>
         {
-          listItems.map(item =>{
+          listItems.map(item =>(
             <FoodItem 
               key={item.foodId} 
               foodId={item.foodId} 
               name={item.name} 
               description={item.description}
+              listItems={listItems}
+              setListItems={setListItems}
             />
-          })
+          ))
         }
       </SimpleGrid>
     </Flex>

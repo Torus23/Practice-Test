@@ -9,14 +9,38 @@ import {
   ModalFooter,
   Input,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useRef } from 'react';
+import {useNavigate} from 'react-router-dom';
 
 export const NewFoodForm = ({ isOpen, onClose }) => {
+  
+  const navigate = useNavigate()
+
   const SubmitFormHandler = () => {
-    // TODO: Implement the logic to make an HTTP request to create a new item in the backend.
-    // TODO: The data will need to be sent from the form that is created below.
-    // TODO: You can use either useState or useRef hooks to get the data from the form into the request.
-  };
+    const name = foodName.current.value;
+    const description = foodDescription.current.value;
+    
+    const newFoodRequest = {
+      "name": name,
+      "description": description,
+      "restaurantId": 1
+    }
+
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/food/create`, {
+      method: 'post',
+      body: JSON.stringify(newFoodRequest),
+      headers: {
+        "Content-Type" : "application/json",
+        "Authorization" : `Bearer ${sessionStorage.getItem('token')}`,
+      },
+    })
+    .then(res => res.json())
+    .then(success =>{
+      if(success) navigate(0);
+    })
+};
+  const foodName = useRef('');
+  const foodDescription = useRef('');
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -24,11 +48,9 @@ export const NewFoodForm = ({ isOpen, onClose }) => {
       <ModalContent>
         <ModalHeader>Create New Food</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          Add the form elements here that you will use to send the request to
-          the backend that allows you to create a new food item. Here is a
-          placeholder input element to get you started :)
-          <Input placeholder="Food name" />
+        <ModalBody>          
+          <Input ref={foodName} placeholder="Name" />
+          <Input ref={foodDescription} placeholder="Description" />
         </ModalBody>
 
         <ModalFooter>
@@ -40,7 +62,7 @@ export const NewFoodForm = ({ isOpen, onClose }) => {
           >
             Close
           </Button>
-          <Button variant="outline" colorScheme="green">
+          <Button onClick={SubmitFormHandler} variant="outline" colorScheme="green">
             Create
           </Button>
         </ModalFooter>

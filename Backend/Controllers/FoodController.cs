@@ -22,7 +22,6 @@ namespace Backend.Controllers
 
         // api/Food/all
         [HttpGet, Route("all")]
-        [Authorize("IsAdmin")]
         public ActionResult<List<GetFoodResponse>> GetAllFoodItem()
         {
             var foods = db.Foods.Include(food => food.Restaurant).ToList();
@@ -32,6 +31,7 @@ namespace Backend.Controllers
 
         // api/Food/create
         [HttpPost, Route("create")]
+        [Authorize("IsAdmin")]
           public ActionResult<bool> CreateFoodItem(CreateFoodRequest request)
         {
             var newFood = request.ConvertToFoodModel();

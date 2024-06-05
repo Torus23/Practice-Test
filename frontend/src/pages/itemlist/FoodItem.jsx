@@ -8,7 +8,23 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 
-export const FoodItem = ({foodId, name, description}) => {
+export const FoodItem = ({foodId, name, description, listItems, setListItems}) => {
+  const HandleDelete =() => {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/food/delete/${foodId}`,{
+        method: 'delete',
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem('token')}`
+        }
+          
+      })
+      .then(res => res.json())
+      .then(success =>{
+        if(success){
+          const newItems = listItems.filter(item => item.foodId !== foodId)
+          setListItems([...newItems])
+        }
+      });
+  }
   return (
     <Card>
       <CardHeader>
@@ -18,12 +34,15 @@ export const FoodItem = ({foodId, name, description}) => {
       </CardHeader>
 
       <CardBody>
-        {description === null? "No description": description}
+        {description === null? "No description" : description}
       </CardBody>
       <CardFooter>
-        <Button variant={'outline'} colorScheme="red">
+        {sessionStorage.getItem('userGroup') === '1' && (
+          <Button onClick={HandleDelete} variant={'outline'} colorScheme="red">
           Delete
-        </Button>
+          </Button>
+
+        )}
       </CardFooter>
     </Card>
   );
