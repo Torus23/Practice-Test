@@ -57,6 +57,14 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    options.MapInboundClaims = false;
+    var signingKeyData = config["JwtSettings:Key"];
+    var signingKeyBytes = Encoding.UTF8.GetBytes(signingKeyData!);
+    var signingKey = new SymmetricSecurityKey(signingKeyBytes); 
+    var issuer = config["JwtSettings:Issuer"];
+    var audience = config["JwtSettings:Audience"];
+
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidAudience = config["JwtSettings:Audience"],
