@@ -14,11 +14,12 @@ namespace Backend.Dtos
             Description = food.Description;
             Restaurant = new GetRestaurantResponse(food.Restaurant!);
         }
+
         public int FoodId { get; set; }
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public GetRestaurantResponse Restaurant {get; set;} = default!;
-
+    
        
 
     }
